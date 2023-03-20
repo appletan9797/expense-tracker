@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->increments('expense_id');
-            $table->string('expense_name');
+            $table->string('expense_details');
             $table->decimal('expense_amount');
             $table->unsignedInteger('category_id');
             $table->date('expense_date');

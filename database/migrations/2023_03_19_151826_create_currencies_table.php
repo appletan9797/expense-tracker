@@ -15,6 +15,8 @@ return new class extends Migration
             $table->increments('currency_id');
             $table->string('currency_name');
             $table->string('currency_symbol');
+            $table->string('currency_country_cn');
+            $table->string('currency_country_en');
             $table->timestamps();
         });
     }

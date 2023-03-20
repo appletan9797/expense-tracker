@@ -14,6 +14,8 @@ use App\Http\Controllers\ExpenseController;
 |
 */
 
+Route::get('/', [ExpenseController::class, 'showAll']);
+
 Route::get('/add-expense', [ExpenseController::class, 'addExpense']);
 
 Route::post('/add-expense', [ExpenseController::class, 'save']);

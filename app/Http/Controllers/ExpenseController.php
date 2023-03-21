@@ -30,7 +30,7 @@ class ExpenseController extends Controller
             $result[$date][] = $eachExpense;
             return $result;
         },[]);
-
+        krsort($groupedData);
         return json_encode($groupedData);
     }
 

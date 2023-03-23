@@ -17,7 +17,7 @@ class ExpenseController extends Controller
                     ->whereMonth('expense_date','=', $currentDate->month)
                     ->get();
         $result = $this->processData($expense->toJson());
-        return view('index', ['allExpense' => json_decode($result)]);
+        return $result;
     }
 
     public function processData($expenseRecord){
@@ -34,22 +34,38 @@ class ExpenseController extends Controller
         return json_encode($groupedData);
     }
 
-    public function addExpense(){
+    public function getExpenseFormFields(){
         $categoryList = Category::all();
         $currencyList = Currency::all();
-        return view('add-expense', ['categories' => $categoryList, 'currencies' => $currencyList]);
+
+        return response()->json([
+            'categories' => $categoryList,
+            'currencies' => $currencyList
+        ]);
     }
 
-    public function save(Request $request){
-        $expense = new Expense();
-        $expense->expense_details=$request->details;
-        $expense->expense_amount=$request->amount;
-        $expense->category_id=$request->category;
-        $expense->expense_date=$request->date;
-        $expense->currency_id=$request->currency;
-        $expense->user_id=1;
-        $expense->save();
+    public function saveExpense(Request $request){
+        try{
+            $expense = new Expense();
+            $expense->expense_details=$request->details;
+            $expense->expense_amount=$request->amount;
+            $expense->category_id=$request->category;
+            $expense->expense_date=$request->date;
+            $expense->currency_id=$request->currency;
+            $expense->user_id=1;
+            $expense->save();
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Expense creation failed: ' . $e->getMessage()
+            ], 400);
+        }
 
-        return $this->addExpense();
+        return response()->json([
+            'success' => true,
+            'message' => 'Expense created successfully',
+            'expense' => $expense
+        ], 201);
     }
 }

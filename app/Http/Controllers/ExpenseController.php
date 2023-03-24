@@ -12,12 +12,16 @@ class ExpenseController extends Controller
 {
     public function showAll(){
         $currentDate = Carbon::now();
-
-        $expense = Expense::whereYear('expense_date','=', $currentDate->year)
-                    ->whereMonth('expense_date','=', $currentDate->month)
-                    ->get();
+        $expense = $this->getAllExpense($currentDate->year, $currentDate->month);
         $result = $this->processData($expense->toJson());
         return $result;
+    }
+
+    public function getAllExpense($year, $month){
+        $expense = Expense::whereYear('expense_date','=', $year)
+                    ->whereMonth('expense_date','=', $month)
+                    ->get();
+        return $expense;
     }
 
     public function showExpense($expenseId){

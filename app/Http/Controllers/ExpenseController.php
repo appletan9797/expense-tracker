@@ -74,4 +74,39 @@ class ExpenseController extends Controller
             'expense' => $expense
         ], 201);
     }
+
+    public function updateExpense(Request $request, $expenseId){
+        $expense = Expense::where('expense_id', $expenseId)->first();
+
+        if(!$expense) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Expense not found'
+            ], 404);
+        }
+
+        try{
+            $expense->expense_details=$request->details;
+            $expense->expense_amount=$request->amount;
+            $expense->category_id=$request->category;
+            $expense->expense_date=$request->date;
+            $expense->currency_id=$request->currency;
+            $expense->payment_method = $request->paymentMethod;
+            $expense->user_id=1;
+            $expense->save();
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Expense record failed to updated: ' . $e->getMessage()
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Expense record updated successfully',
+            'expense' => $expense
+        ], 200);
+
+    }
 }

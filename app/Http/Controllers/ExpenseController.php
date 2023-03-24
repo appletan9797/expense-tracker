@@ -20,6 +20,11 @@ class ExpenseController extends Controller
         return $result;
     }
 
+    public function showExpense($expenseId){
+        $expense = Expense::where('expense_id', $expenseId)->first();
+        return $expense;
+    }
+
     public function processData($expenseRecord){
         $dataToArray = json_decode($expenseRecord, true);
         $groupedData = array_reduce($dataToArray, function($result, $eachExpense){

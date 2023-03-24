@@ -139,4 +139,29 @@ class ExpenseController extends Controller
             ], 400);
         }
     }
+
+    public function getDataForChart($month = null, $year = null){
+        if(!$month){
+            $month = date('m');
+        }
+        if(!$year){
+            $year = date('Y');
+        }
+
+        $expenseDataForChart = Expense::selectRaw('categories.category_name_en as label,
+                        ROUND((SUM(expense_amount) / (SELECT SUM(expense_amount) FROM expenses
+                        WHERE YEAR(expense_date) = ? AND MONTH(expense_date) = ?)) * 100,2) as value', [$year, $month])
+                    ->join('categories', 'expenses.category_id', '=', 'categories.category_id')
+                    ->whereYear('expense_date','=', $year)
+                    ->whereMonth('expense_date','=', $month)
+                    ->groupBy('categories.category_name_en')
+                    ->get();
+        $expenseDetails = $this->getAllExpense($year, $month);
+
+        return response()->json([
+            'chart_data' => $expenseDataForChart,
+            'details_data' => $expenseDetails
+        ]);
+    }
+
 }

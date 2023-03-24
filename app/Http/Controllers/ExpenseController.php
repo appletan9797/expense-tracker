@@ -57,6 +57,7 @@ class ExpenseController extends Controller
             $expense->category_id=$request->category;
             $expense->expense_date=$request->date;
             $expense->currency_id=$request->currency;
+            $expense->payment_method = $request->paymentMethod;
             $expense->user_id=1;
             $expense->save();
         }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('expense_amount');
             $table->unsignedInteger('category_id');
             $table->date('expense_date');
+            $table->enum('payment_method', ['Cash','Card']);
             $table->unsignedInteger('currency_id');
             $table->unsignedInteger('user_id');
             $table->timestamps();

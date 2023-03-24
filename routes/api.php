@@ -28,3 +28,5 @@ Route::get('get-form-fields', [ExpenseController::class, 'getExpenseFormFields']
 Route::post('/add-expense', [ExpenseController::class, 'saveExpense']);
 
 Route::patch('expenses/{expenseId}', [ExpenseController::class, 'updateExpense']);
+
+Route::delete('expenses/{expenseId}', [ExpenseController::class, 'deleteExpense']);

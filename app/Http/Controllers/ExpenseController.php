@@ -109,4 +109,30 @@ class ExpenseController extends Controller
         ], 200);
 
     }
+
+    public function deleteExpense($expenseId){
+        $expense = Expense::where('expense_id', $expenseId)->first();
+
+        if(!$expense) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Expense not found'
+            ], 404);
+        }
+
+        try {
+            $expense->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Expense deleted successfully'
+            ], 200);
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Expense deletion failed: ' . $e->getMessage()
+            ], 400);
+        }
+    }
 }

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +33,5 @@ Route::post('/add-expense', [ExpenseController::class, 'saveExpense']);
 Route::patch('expenses/{expenseId}', [ExpenseController::class, 'updateExpense']);
 
 Route::delete('expenses/{expenseId}', [ExpenseController::class, 'deleteExpense']);
+
+Route::post('register', [AuthController::class,'register']);

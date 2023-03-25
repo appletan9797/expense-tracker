@@ -35,3 +35,5 @@ Route::patch('expenses/{expenseId}', [ExpenseController::class, 'updateExpense']
 Route::delete('expenses/{expenseId}', [ExpenseController::class, 'deleteExpense']);
 
 Route::post('register', [AuthController::class,'register']);
+
+Route::post('login', [AuthController::class,'login']);

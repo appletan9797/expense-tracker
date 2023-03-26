@@ -49,3 +49,5 @@ Route::get('categories', [CategoryController::class, 'getAllCategories']);
 Route::post('add-category', [CategoryController::class, 'addCategory']);
 
 Route::patch('categories/{categoryId}', [CategoryController::class, 'updateCategory']);
+
+Route::delete('categories/{categoryId}', [CategoryController::class, 'deleteCategory']);

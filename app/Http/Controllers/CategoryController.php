@@ -62,6 +62,32 @@ class CategoryController extends Controller
         ], 200);
     }
 
+    public function deleteCategory($categoryId){
+        $category = $this->getCategoryById($categoryId);
+
+        if(!$category) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category not found'
+            ], 404);
+        }
+
+        try {
+            $category->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Category deleted successfully'
+            ], 200);
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category deletion failed: ' . $e->getMessage()
+            ], 400);
+        }
+    }
+
     public function getCategoryById($categoryId){
         $category = Category::where('category_id', $categoryId)->first();
         return $category;

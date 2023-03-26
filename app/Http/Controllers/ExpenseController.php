@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Expense;
+use App\Models\UserSetting;
 use Carbon\Carbon;
 
 class ExpenseController extends Controller
@@ -46,10 +47,12 @@ class ExpenseController extends Controller
     public function getExpenseFormFields(){
         $categoryList = Category::all();
         $currencyList = Currency::all();
+        $defaultCurrency = UserSetting::where('user_id',2)->first();
 
         return response()->json([
             'categories' => $categoryList,
-            'currencies' => $currencyList
+            'currencies' => $currencyList,
+            'defaultCurrency' => $defaultCurrency
         ]);
     }
 

@@ -47,3 +47,5 @@ Route::patch('update-default-currency/{userId}', [CurrencyController::class, 'up
 Route::get('categories', [CategoryController::class, 'getAllCategories']);
 
 Route::post('add-category', [CategoryController::class, 'addCategory']);
+
+Route::patch('categories/{categoryId}', [CategoryController::class, 'updateCategory']);

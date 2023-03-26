@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class UserSetting extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'user_setting_id';
 }

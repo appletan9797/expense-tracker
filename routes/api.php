@@ -40,3 +40,5 @@ Route::post('register', [AuthController::class,'register']);
 Route::post('login', [AuthController::class,'login']);
 
 Route::post('add-default-currency', [CurrencyController::class, 'addDefaultCurrency']);
+
+Route::patch('update-default-currency/{userId}', [CurrencyController::class, 'updateDefaultCurrency']);

@@ -27,4 +27,32 @@ class CurrencyController extends Controller
             'userCurrencySetting' => $userCurrencySettings
         ], 201);
     }
+
+    public function updateDefaultCurrency(Request $request, $userId){
+        $userCurrencySettings = UserSetting::where('user_id',$userId)->first();
+
+        if(!$userCurrencySettings) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Setting not found'
+            ], 404);
+        }
+
+        try{
+            $userCurrencySettings->currency_id = $request->currency_id;
+            $userCurrencySettings->save();
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Setting update failed: ' . $e->getMessage()
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Setting updated successfully',
+            'userCurrencySetting' => $userCurrencySettings
+        ], 200);
+    }
 }

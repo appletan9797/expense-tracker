@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CurrencyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +38,5 @@ Route::delete('expenses/{expenseId}', [ExpenseController::class, 'deleteExpense'
 Route::post('register', [AuthController::class,'register']);
 
 Route::post('login', [AuthController::class,'login']);
+
+Route::post('add-default-currency', [CurrencyController::class, 'addDefaultCurrency']);

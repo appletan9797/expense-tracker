@@ -17,8 +17,12 @@ class PasswordController extends Controller
             ], 404);
         }
 
+        return $this->savePasswordToDB($user,$request->newPassword);
+    }
+
+    public function savePasswordToDB($user, $password){
         try{
-            $user->password = Hash::make($request->newPassword);
+            $user->password = Hash::make($password);
             $user->save();
         }
         catch(\Exception $e){

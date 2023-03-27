@@ -6,7 +6,7 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\PasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,4 +53,4 @@ Route::patch('categories/{categoryId}', [CategoryController::class, 'updateCateg
 
 Route::delete('categories/{categoryId}', [CategoryController::class, 'deleteCategory']);
 
-Route::patch('update-password/{userId}', [UserController::class, 'updatePassword']);
+Route::patch('update-password/{userId}', [PasswordController::class, 'updatePassword']);

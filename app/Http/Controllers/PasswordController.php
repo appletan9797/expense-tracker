@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class PasswordController extends Controller
 {
     public function updatePassword(Request $request, $userId){
         $user = $this->getUserById($userId);

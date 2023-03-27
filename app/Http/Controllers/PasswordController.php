@@ -80,6 +80,35 @@ class PasswordController extends Controller
         }
     }
 
+    public function handleResetPassword(Request $request){
+        $validated = $this->validateIsEmailExistInUserTable($request);
+        if($validated instanceof \Illuminate\Http\JsonResponse){
+            return $validated;
+        }
+
+        $tokenEmailRecord = $this->checkIsTokenEmailRecordExist($validated['email'],$request->token);
+        if($tokenEmailRecord instanceof \Illuminate\Http\JsonResponse){
+            return $tokenEmailRecord;
+        }
+
+        $userToUpdatePassword = User::where('email',$validated['email'])->first();
+        return $this->savePasswordToDB($userToUpdatePassword, $request->password);
+    }
+
+    public function checkIsTokenEmailRecordExist($email,$token){
+        $tokenEmailRecord = PasswordResetToken::where([
+            "email" => $email,
+            "token" => $token
+        ])->latest()->first();
+
+        if(!$tokenEmailRecord){
+            return response()->json([
+                'success' => false,
+                'message' => 'Token record not found'
+            ], 404);
+        }
+    }
+
     public function savePasswordToDB($user, $password){
         try{
             $user->password = Hash::make($password);
@@ -98,6 +127,7 @@ class PasswordController extends Controller
             'user' => $user
         ], 200);
     }
+
 
     public function getUserById($userId){
         $user = User::where('user_id', $userId)->first();

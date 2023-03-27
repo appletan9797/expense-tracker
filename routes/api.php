@@ -56,3 +56,5 @@ Route::delete('categories/{categoryId}', [CategoryController::class, 'deleteCate
 Route::patch('update-password/{userId}', [PasswordController::class, 'updatePassword']);
 
 Route::post('forgot-password', [PasswordController::class, 'handleForgotPassword']);
+
+Route::post('reset-password', [PasswordController::class, 'handleResetPassword']);

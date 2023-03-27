@@ -13,7 +13,8 @@ class AuthController extends Controller
     public function register(Request $request){
         try{
             $validated = $request->validate([
-                'username' => 'required|unique:users,user_name'
+                'username' => 'required|unique:users,user_name',
+                'email' => 'required|unique:users,email'
             ]);
         }
         catch(Exception $e){
@@ -26,6 +27,7 @@ class AuthController extends Controller
 
         $user = new User();
         $user->user_name = $validated['username'];
+        $user->email = $validated['email'];
         $user->password = Hash::make($request->password);
         $user->save();
 

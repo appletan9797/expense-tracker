@@ -15,7 +15,10 @@ return new class extends Migration
             $table->increments('category_id');
             $table->string('category_name_cn');
             $table->string('category_name_en');
+            $table->unsignedInteger('user_id');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 

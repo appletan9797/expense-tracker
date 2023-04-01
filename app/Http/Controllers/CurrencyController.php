@@ -11,7 +11,7 @@ class CurrencyController extends Controller
         try{
             $userCurrencySettings = new UserSetting();
             $userCurrencySettings->user_id = $request->user_id;
-            $userCurrencySettings->currency_id = $request->currency_id;
+            $userCurrencySettings->default_currency_id = $request->currency_id;
             $userCurrencySettings->save();
         }
         catch(\Exception $e){
@@ -39,7 +39,7 @@ class CurrencyController extends Controller
         }
 
         try{
-            $userCurrencySettings->currency_id = $request->currency_id;
+            $userCurrencySettings->default_currency_id = $request->currency_id;
             $userCurrencySettings->save();
         }
         catch(\Exception $e){

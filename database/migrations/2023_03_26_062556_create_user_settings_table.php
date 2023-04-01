@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_settings', function (Blueprint $table) {
             $table->increments('user_setting_id');
             $table->unsignedInteger('user_id')->unique();
-            $table->unsignedInteger('currency_id');
+            $table->unsignedInteger('default_currency_id');
             $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');

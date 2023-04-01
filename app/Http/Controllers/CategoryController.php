@@ -7,14 +7,14 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    public function getAllCategories(){
+    public function index(){
         $categoryList = Category::all();
         return response()->json([
             'categories' => $categoryList
         ]);
     }
 
-    public function addCategory(Request $request){
+    public function store(Request $request){
         try{
             $category = new Category();
             $category->category_name_en = $request->categoryNameEn;
@@ -34,7 +34,7 @@ class CategoryController extends Controller
         ], 201);
     }
 
-    public function updateCategory(Request $request, $categoryId){
+    public function update(Request $request, $categoryId){
         $category = $this->getCategoryById($categoryId);
 
         if(!$category) {
@@ -62,7 +62,7 @@ class CategoryController extends Controller
         ], 200);
     }
 
-    public function deleteCategory($categoryId){
+    public function destroy($categoryId){
         $category = $this->getCategoryById($categoryId);
 
         if(!$category) {
@@ -88,7 +88,7 @@ class CategoryController extends Controller
         }
     }
 
-    public function getCategoryById($categoryId){
+    public function show($categoryId){
         $category = Category::where('category_id', $categoryId)->first();
         return $category;
     }

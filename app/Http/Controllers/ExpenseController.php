@@ -11,7 +11,7 @@ use Carbon\Carbon;
 
 class ExpenseController extends Controller
 {
-    public function showAll(){
+    public function index(){
         $currentDate = Carbon::now();
         $expense = $this->getAllExpense($currentDate->year, $currentDate->month);
         $result = $this->processData($expense->toJson());
@@ -25,7 +25,7 @@ class ExpenseController extends Controller
         return $expense;
     }
 
-    public function showExpense($expenseId){
+    public function show($expenseId){
         $expense = Expense::where('expense_id', $expenseId)->first();
         return $expense;
     }
@@ -56,7 +56,7 @@ class ExpenseController extends Controller
         ]);
     }
 
-    public function saveExpense(Request $request){
+    public function store(Request $request){
         try{
             $expense = new Expense();
             $expense->expense_details=$request->details;
@@ -82,7 +82,7 @@ class ExpenseController extends Controller
         ], 201);
     }
 
-    public function updateExpense(Request $request, $expenseId){
+    public function update(Request $request, $expenseId){
         $expense = Expense::where('expense_id', $expenseId)->first();
 
         if(!$expense) {
@@ -117,7 +117,7 @@ class ExpenseController extends Controller
 
     }
 
-    public function deleteExpense($expenseId){
+    public function destroy($expenseId){
         $expense = Expense::where('expense_id', $expenseId)->first();
 
         if(!$expense) {

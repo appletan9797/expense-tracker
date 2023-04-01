@@ -23,38 +23,38 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('expenses', [ExpenseController::class, 'showAll']);
+Route::get('expenses', [ExpenseController::class, 'index']);
 
-Route::get('expenses/{expenseId}', [ExpenseController::class, 'showExpense']);
+Route::get('expenses/{expenseId}', [ExpenseController::class, 'show']);
 
-Route::get('get-form-fields', [ExpenseController::class, 'getExpenseFormFields']);
+Route::get('expense/form-fields', [ExpenseController::class, 'getExpenseFormFields']);
 
-Route::get('get-chart-data/{month?}/{year?}',[ExpenseController::class, 'getDataForChart']);
+Route::get('expense/chart-data/{month?}/{year?}',[ExpenseController::class, 'getDataForChart']);
 
-Route::post('/add-expense', [ExpenseController::class, 'saveExpense']);
+Route::post('expenses', [ExpenseController::class, 'store']);
 
-Route::patch('expenses/{expenseId}', [ExpenseController::class, 'updateExpense']);
+Route::patch('expenses/{expenseId}', [ExpenseController::class, 'update']);
 
-Route::delete('expenses/{expenseId}', [ExpenseController::class, 'deleteExpense']);
+Route::delete('expenses/{expenseId}', [ExpenseController::class, 'destroy']);
 
 Route::post('register', [AuthController::class,'register']);
 
 Route::post('login', [AuthController::class,'login']);
 
-Route::post('add-default-currency', [CurrencyController::class, 'addDefaultCurrency']);
+Route::post('users/default-currency', [CurrencyController::class, 'store']);
 
-Route::patch('update-default-currency/{userId}', [CurrencyController::class, 'updateDefaultCurrency']);
+Route::patch('users/default-currency/{userId}', [CurrencyController::class, 'update']);
 
-Route::get('categories', [CategoryController::class, 'getAllCategories']);
+Route::get('categories', [CategoryController::class, 'index']);
 
-Route::post('add-category', [CategoryController::class, 'addCategory']);
+Route::post('categories', [CategoryController::class, 'store']);
 
-Route::patch('categories/{categoryId}', [CategoryController::class, 'updateCategory']);
+Route::patch('categories/{categoryId}', [CategoryController::class, 'update']);
 
-Route::delete('categories/{categoryId}', [CategoryController::class, 'deleteCategory']);
+Route::delete('categories/{categoryId}', [CategoryController::class, 'destroy']);
 
-Route::patch('update-password/{userId}', [PasswordController::class, 'updatePassword']);
+Route::patch('users/{userId}/password', [PasswordController::class, 'update']);
 
-Route::post('forgot-password', [PasswordController::class, 'handleForgotPassword']);
+Route::post('users/forgot-password', [PasswordController::class, 'handleForgotPassword']);
 
-Route::post('reset-password', [PasswordController::class, 'handleResetPassword']);
+Route::post('users/reset-password', [PasswordController::class, 'handleResetPassword']);

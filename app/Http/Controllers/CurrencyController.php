@@ -7,7 +7,7 @@ use App\Models\UserSetting;
 
 class CurrencyController extends Controller
 {
-    public function addDefaultCurrency(Request $request){
+    public function store(Request $request){
         try{
             $userCurrencySettings = new UserSetting();
             $userCurrencySettings->user_id = $request->user_id;
@@ -28,7 +28,7 @@ class CurrencyController extends Controller
         ], 201);
     }
 
-    public function updateDefaultCurrency(Request $request, $userId){
+    public function update(Request $request, $userId){
         $userCurrencySettings = UserSetting::where('user_id',$userId)->first();
 
         if(!$userCurrencySettings) {

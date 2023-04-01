@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 
 class PasswordController extends Controller
 {
-    public function updatePassword(Request $request, $userId){
+    public function update(Request $request, $userId){
         $user = $this->getUserById($userId);
         if(!$user) {
             return response()->json([

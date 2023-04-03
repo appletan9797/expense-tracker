@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\UserSetting;
+use App\Repositories\UserSettingRepository;
 
 class UserSettingController extends Controller
 {
+    public function __construct(private UserSettingRepository $userSettingRepository)
+    {
+
+    }
+
     public function store(Request $request){
         try{
-            $userCurrencySettings = new UserSetting();
-            $userCurrencySettings->user_id = $request->user_id;
-            $userCurrencySettings->default_currency_id = $request->currency_id;
-            $userCurrencySettings->save();
+           $userDefaultCurrency = $this->userSettingRepository->createUserDefaultCurrency($request);
         }
         catch(\Exception $e){
             return response()->json([
@@ -24,12 +26,12 @@ class UserSettingController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Setting created successfully',
-            'userCurrencySetting' => $userCurrencySettings
+            'userCurrencySetting' => $userDefaultCurrency
         ], 201);
     }
 
     public function update(Request $request, $userId){
-        $userCurrencySettings = UserSetting::where('user_id',$userId)->first();
+        $userCurrencySettings = $this->userSettingRepository->getUserDefaultCurrencySetting($userId);
 
         if(!$userCurrencySettings) {
             return response()->json([
@@ -39,8 +41,7 @@ class UserSettingController extends Controller
         }
 
         try{
-            $userCurrencySettings->default_currency_id = $request->currency_id;
-            $userCurrencySettings->save();
+            $userCurrencySettings = $this->userSettingRepository->updateUserDefaultCurrency($userCurrencySettings, $request);
         }
         catch(\Exception $e){
             return response()->json([

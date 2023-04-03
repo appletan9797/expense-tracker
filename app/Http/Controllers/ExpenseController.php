@@ -3,34 +3,43 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Category;
-use App\Models\Currency;
-use App\Models\Expense;
-use App\Models\UserSetting;
-use Carbon\Carbon;
+use App\Repositories\CategoryRepository;
+use App\Repositories\ExpenseRepository;
+use App\Repositories\CurrencyRepository;
+use App\Repositories\UserSettingRepository;
 
 class ExpenseController extends Controller
 {
-    public function index(){
-        $currentDate = Carbon::now();
-        $expense = $this->getAllExpense($currentDate->year, $currentDate->month);
+    public function __construct(private ExpenseRepository $expenseRepository, private CategoryRepository $categoryRepository, private CurrencyRepository $currencyRepository, private UserSettingRepository $userSettingRepository)
+    {
+
+    }
+
+    public function index()
+    {
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+        $userId = 1;
+
+        $expense = $this->getAllExpense($currentYear, $currentMonth, $userId);
         $result = $this->processData($expense->toJson());
         return $result;
     }
 
-    public function getAllExpense($year, $month){
-        $expense = Expense::whereYear('expense_date','=', $year)
-                    ->whereMonth('expense_date','=', $month)
-                    ->get();
+    public function getAllExpense($year, $month, $userId)
+    {
+        $expense = $this->expenseRepository->getExpensesOfCurrentMonth($year, $month, $userId);
         return $expense;
     }
 
-    public function show($expenseId){
-        $expense = Expense::where('expense_id', $expenseId)->first();
+    public function show($expenseId)
+    {
+        $expense = $this->expenseRepository->getExpenseById($expenseId);
         return $expense;
     }
 
-    public function processData($expenseRecord){
+    public function processData($expenseRecord)
+    {
         $dataToArray = json_decode($expenseRecord, true);
         $groupedData = array_reduce($dataToArray, function($result, $eachExpense){
             $date = $eachExpense['expense_date'];
@@ -44,10 +53,13 @@ class ExpenseController extends Controller
         return json_encode($groupedData);
     }
 
-    public function getExpenseFormFields(){
-        $categoryList = Category::all();
-        $currencyList = Currency::all();
-        $defaultCurrency = UserSetting::where('user_id',2)->first();
+    public function getExpenseFormFields()
+    {
+        //TODO : to pass user_id to the function
+        $userId = 2;
+        $categoryList = $this->categoryRepository->getCategoriesByUserId();
+        $currencyList = $this->currencyRepository->getAllCurrencies();
+        $defaultCurrency = $this->userSettingRepository->getUserDefaultCurrencySetting($userId);
 
         return response()->json([
             'categories' => $categoryList,
@@ -56,17 +68,10 @@ class ExpenseController extends Controller
         ]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         try{
-            $expense = new Expense();
-            $expense->expense_details=$request->details;
-            $expense->expense_amount=$request->amount;
-            $expense->category_id=$request->category;
-            $expense->expense_date=$request->date;
-            $expense->currency_id=$request->currency;
-            $expense->payment_method = $request->paymentMethod;
-            $expense->user_id=1;
-            $expense->save();
+            $expense = $this->expenseRepository->createExpense($request);
         }
         catch(\Exception $e){
             return response()->json([
@@ -82,8 +87,9 @@ class ExpenseController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $expenseId){
-        $expense = Expense::where('expense_id', $expenseId)->first();
+    public function update(Request $request, $expenseId)
+    {
+        $expense = $this->show($expenseId);
 
         if(!$expense) {
             return response()->json([
@@ -93,14 +99,7 @@ class ExpenseController extends Controller
         }
 
         try{
-            $expense->expense_details=$request->details;
-            $expense->expense_amount=$request->amount;
-            $expense->category_id=$request->category;
-            $expense->expense_date=$request->date;
-            $expense->currency_id=$request->currency;
-            $expense->payment_method = $request->paymentMethod;
-            $expense->user_id=1;
-            $expense->save();
+            $expense = $this->expenseRepository->updateExpense($expense, $request);
         }
         catch(\Exception $e){
             return response()->json([
@@ -117,8 +116,9 @@ class ExpenseController extends Controller
 
     }
 
-    public function destroy($expenseId){
-        $expense = Expense::where('expense_id', $expenseId)->first();
+    public function destroy($expenseId)
+    {
+        $expense = $this->show($expenseId);
 
         if(!$expense) {
             return response()->json([
@@ -128,12 +128,7 @@ class ExpenseController extends Controller
         }
 
         try {
-            $expense->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Expense deleted successfully'
-            ], 200);
+            $this->expenseRepository->deleteExpense($expense);
         }
         catch (\Exception $e) {
             return response()->json([
@@ -141,25 +136,25 @@ class ExpenseController extends Controller
                 'message' => 'Expense deletion failed: ' . $e->getMessage()
             ], 400);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Expense deleted successfully'
+        ], 200);
     }
 
-    public function getDataForChart($month = null, $year = null){
+    public function getDataForChart($month = null, $year = null)
+    {
         if(!$month){
             $month = date('m');
         }
         if(!$year){
             $year = date('Y');
         }
+        $userId = 1;
 
-        $expenseDataForChart = Expense::selectRaw('categories.category_name_en as label,
-                        ROUND((SUM(expense_amount) / (SELECT SUM(expense_amount) FROM expenses
-                        WHERE YEAR(expense_date) = ? AND MONTH(expense_date) = ?)) * 100,2) as value', [$year, $month])
-                    ->join('categories', 'expenses.category_id', '=', 'categories.category_id')
-                    ->whereYear('expense_date','=', $year)
-                    ->whereMonth('expense_date','=', $month)
-                    ->groupBy('categories.category_name_en')
-                    ->get();
-        $expenseDetails = $this->getAllExpense($year, $month);
+        $expenseDataForChart = $this->expenseRepository->getDataForChart($year, $month, $userId);
+        $expenseDetails = $this->getAllExpense($year, $month, $userId);
 
         return response()->json([
             'chart_data' => $expenseDataForChart,

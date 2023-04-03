@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\PasswordResetToken;
+use App\Repositories\PasswordResetTokenRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Mail\SentMessage;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 
 class PasswordController extends Controller
 {
+    public function __construct(private UserRepository $userRepository, private PasswordResetTokenRepository $passwordResetTokenRepository)
+    {
+
+    }
+
     public function update(Request $request, $userId){
         $user = $this->getUserById($userId);
         if(!$user) {
@@ -41,10 +45,7 @@ class PasswordController extends Controller
     public function saveNewPasswordResetToken($email){
         $token = Str::random(64);
         try{
-            $newTokenRecord = new PasswordResetToken();
-            $newTokenRecord->email= $email;
-            $newTokenRecord->token = $token;
-            $newTokenRecord->save();
+            $this->passwordResetTokenRepository->createNewToken($token,$email);
         }
         catch(\Exception $e){
             return response()->json([
@@ -91,15 +92,12 @@ class PasswordController extends Controller
             return $tokenEmailRecord;
         }
 
-        $userToUpdatePassword = User::where('email',$validated['email'])->first();
+        $userToUpdatePassword = $this->userRepository->getUserByEmail($validated['email']);
         return $this->savePasswordToDB($userToUpdatePassword, $request->password);
     }
 
     public function checkIsTokenEmailRecordExist($email,$token){
-        $tokenEmailRecord = PasswordResetToken::where([
-            "email" => $email,
-            "token" => $token
-        ])->latest()->first();
+        $tokenEmailRecord = $this->passwordResetTokenRepository->getRecordByEmailAndToken($email,$token);
 
         if(!$tokenEmailRecord){
             return response()->json([
@@ -111,8 +109,7 @@ class PasswordController extends Controller
 
     public function savePasswordToDB($user, $password){
         try{
-            $user->password = Hash::make($password);
-            $user->save();
+            $user = $this->userRepository->updateUserPassword($user,$password);
         }
         catch(\Exception $e){
             return response()->json([
@@ -128,10 +125,8 @@ class PasswordController extends Controller
         ], 200);
     }
 
-
     public function getUserById($userId){
-        $user = User::where('user_id', $userId)->first();
-        return $user;
+        return $this->userRepository->getUserById($userId);
     }
 
     public function validateIsEmailExistInUserTable($request){

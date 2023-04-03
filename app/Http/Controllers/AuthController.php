@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-
+use App\Repositories\UserRepository;
+use App\Models\User;
 class AuthController extends Controller
 {
+    public function __construct(private UserRepository $userRepository)
+    {
+
+    }
+
     public function register(Request $request){
         try{
             $validated = $request->validate([
@@ -25,11 +29,7 @@ class AuthController extends Controller
             ],422);
         }
 
-        $user = new User();
-        $user->user_name = $validated['username'];
-        $user->email = $validated['email'];
-        $user->password = Hash::make($request->password);
-        $user->save();
+        $this->userRepository->createUser($validated['username'],$validated['email'], $request->password);
 
         return response()->json([
             'status' => 'success',

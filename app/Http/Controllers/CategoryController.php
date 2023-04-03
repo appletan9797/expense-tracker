@@ -3,22 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Category;
+use App\Repositories\CategoryRepository;
 
 class CategoryController extends Controller
 {
-    public function index(){
-        $categoryList = Category::all();
+    public function __construct(private CategoryRepository $categoryRepository)
+    {
+
+    }
+
+    public function index()
+    {
+        $userId = 1;
+        $categoryList = $this->categoryRepository->getCategoriesByUserId($userId);
         return response()->json([
             'categories' => $categoryList
         ]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         try{
-            $category = new Category();
-            $category->category_name_en = $request->categoryNameEn;
-            $category->save();
+            $category = $this->categoryRepository->createCategory($request);
         }
         catch(\Exception $e){
             return response()->json([
@@ -34,8 +40,9 @@ class CategoryController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $categoryId){
-        $category = $this->getCategoryById($categoryId);
+    public function update(Request $request, $categoryId)
+    {
+        $category = $this->show($categoryId);
 
         if(!$category) {
             return response()->json([
@@ -45,8 +52,7 @@ class CategoryController extends Controller
         }
 
         try{
-            $category->category_name_en = $request->categoryNameEn;
-            $category->save();
+            $category = $this->categoryRepository->updateCategory($category, $request);
         }
         catch(\Exception $e){
             return response()->json([
@@ -62,8 +68,9 @@ class CategoryController extends Controller
         ], 200);
     }
 
-    public function destroy($categoryId){
-        $category = $this->getCategoryById($categoryId);
+    public function destroy($categoryId)
+    {
+        $category = $this->show($categoryId);
 
         if(!$category) {
             return response()->json([
@@ -73,12 +80,7 @@ class CategoryController extends Controller
         }
 
         try {
-            $category->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Category deleted successfully'
-            ], 200);
+            $this->categoryRepository->deleteCategory($category);
         }
         catch (\Exception $e) {
             return response()->json([
@@ -86,10 +88,15 @@ class CategoryController extends Controller
                 'message' => 'Category deletion failed: ' . $e->getMessage()
             ], 400);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Category deleted successfully'
+        ], 200);
     }
 
-    public function show($categoryId){
-        $category = Category::where('category_id', $categoryId)->first();
-        return $category;
+    public function show($categoryId)
+    {
+        return $this->categoryRepository->getCategoryById($categoryId);
     }
 }

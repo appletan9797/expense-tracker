@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\UserSetting;
 
-class CurrencyController extends Controller
+class UserSettingController extends Controller
 {
     public function store(Request $request){
         try{

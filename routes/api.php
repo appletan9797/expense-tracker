@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\UserSettingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PasswordController;
 
@@ -41,9 +41,9 @@ Route::post('register', [AuthController::class,'register']);
 
 Route::post('login', [AuthController::class,'login']);
 
-Route::post('users/default-currency', [CurrencyController::class, 'store']);
+Route::post('users/default-currency', [UserSettingController::class, 'store']);
 
-Route::patch('users/default-currency/{userId}', [CurrencyController::class, 'update']);
+Route::patch('users/default-currency/{userId}', [UserSettingController::class, 'update']);
 
 Route::get('categories', [CategoryController::class, 'index']);
 

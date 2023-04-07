@@ -6,6 +6,7 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserSettingController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\PasswordController;
 
 /*
@@ -56,3 +57,5 @@ Route::patch('users/{userId}/password', [PasswordController::class, 'update']);
 Route::post('users/forgot-password', [PasswordController::class, 'handleForgotPassword']);
 
 Route::post('users/reset-password', [PasswordController::class, 'handleResetPassword']);
+
+Route::get('currencies', [CurrencyController::class,'index']);

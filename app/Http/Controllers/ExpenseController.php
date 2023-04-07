@@ -53,21 +53,6 @@ class ExpenseController extends Controller
         return json_encode($groupedData);
     }
 
-    public function getExpenseFormFields()
-    {
-        //TODO : to pass user_id to the function
-        $userId = 2;
-        $categoryList = $this->categoryRepository->getCategoriesByUserId();
-        $currencyList = $this->currencyRepository->getAllCurrencies();
-        $defaultCurrency = $this->userSettingRepository->getUserDefaultCurrencySetting($userId);
-
-        return response()->json([
-            'categories' => $categoryList,
-            'currencies' => $currencyList,
-            'defaultCurrency' => $defaultCurrency
-        ]);
-    }
-
     public function store(Request $request)
     {
         try{

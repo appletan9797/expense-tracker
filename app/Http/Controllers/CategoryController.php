@@ -12,9 +12,8 @@ class CategoryController extends Controller
 
     }
 
-    public function index()
+    public function index($userId)
     {
-        $userId = 1;
         $categoryList = $this->categoryRepository->getCategoriesByUserId($userId);
         return response()->json([
             'categories' => $categoryList

@@ -46,7 +46,7 @@ Route::patch('users/default-currency/{userId}', [UserSettingController::class, '
 
 Route::get('users/default-currency/{userId}', [UserSettingController::class, 'show']);
 
-Route::get('categories', [CategoryController::class, 'index']);
+Route::get('categories/{userId?}', [CategoryController::class, 'index']);
 
 Route::post('categories', [CategoryController::class, 'store']);
 

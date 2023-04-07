@@ -14,7 +14,13 @@ class AuthController extends Controller
 
     }
 
-    public function register(Request $request){
+    public function show(Request $request)
+    {
+        return $request->user();
+    }
+
+    public function register(Request $request)
+    {
         try{
             $validated = $request->validate([
                 'username' => 'required|unique:users,user_name',
@@ -37,7 +43,8 @@ class AuthController extends Controller
         ],200);
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $login = Auth::attempt([
             User::USERNAME_FIELD => $request->username,
             'password' => $request->password
@@ -45,10 +52,11 @@ class AuthController extends Controller
 
         if($login){
             $user = Auth::user();
-            $token = $user->createToken('My Token')->plainTextToken;
-            $cookie = cookie('expense_tracker_login',$token, 60 * 24 *30);
+            $token = $user->createToken('User Login Token')->plainTextToken;
+            $cookie = cookie('expense_tracker_login',$token, 60 * 24 *30,null,null,false,true,'None');
             return response([
-                'statusText'=>'success'
+                'statusText'=>'success',
+                'userid' => Auth::id(),
             ])->withCookie($cookie);
         }
         else{

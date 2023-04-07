@@ -19,9 +19,7 @@ use App\Http\Controllers\PasswordController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:sanctum')->get('/user', [AuthController::class,'show']);
 
 Route::get('expenses', [ExpenseController::class, 'index']);
 

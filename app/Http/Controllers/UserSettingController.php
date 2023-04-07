@@ -12,7 +12,8 @@ class UserSettingController extends Controller
 
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         try{
            $userDefaultCurrency = $this->userSettingRepository->createUserDefaultCurrency($request);
         }
@@ -30,7 +31,14 @@ class UserSettingController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $userId){
+    public function show($userId)
+    {
+        $defaultCurrencySetting = $this->userSettingRepository->getUserDefaultCurrencySetting($userId);
+        return $defaultCurrencySetting;
+    }
+
+    public function update(Request $request, $userId)
+    {
         $userCurrencySettings = $this->userSettingRepository->getUserDefaultCurrencySetting($userId);
 
         if(!$userCurrencySettings) {

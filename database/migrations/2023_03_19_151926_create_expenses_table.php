@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('expenses', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->increments('expense_id');
             $table->string('expense_details');
             $table->decimal('expense_amount');

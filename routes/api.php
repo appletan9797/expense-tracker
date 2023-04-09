@@ -22,19 +22,17 @@ use App\Http\Controllers\PasswordController;
 
 Route::middleware('auth:sanctum')->get('/user', [AuthController::class,'show']);
 
-Route::get('expenses', [ExpenseController::class, 'index']);
+Route::get('transactions', [TransactionController::class, 'index']);
 
-Route::get('expenses/{expenseId}', [ExpenseController::class, 'show']);
+Route::get('transactions/{transactionId}', [TransactionController::class, 'show']);
 
-Route::get('expense/form-fields', [ExpenseController::class, 'getExpenseFormFields']);
+Route::get('transaction/chart-data/{month?}/{year?}',[TransactionController::class, 'getDataForChart']);
 
-Route::get('expense/chart-data/{month?}/{year?}',[ExpenseController::class, 'getDataForChart']);
+Route::post('transactions', [TransactionController::class, 'store']);
 
-Route::post('expenses', [ExpenseController::class, 'store']);
+Route::patch('transactions/{transactionId}', [TransactionController::class, 'update']);
 
-Route::patch('expenses/{expenseId}', [ExpenseController::class, 'update']);
-
-Route::delete('expenses/{expenseId}', [ExpenseController::class, 'destroy']);
+Route::delete('transactions/{transactionId}', [TransactionController::class, 'destroy']);
 
 Route::post('register', [AuthController::class,'register']);
 

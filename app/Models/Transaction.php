@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Expense extends Model
+class Transaction extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'expense_id';
+    protected $primaryKey = 'transaction_id';
 }

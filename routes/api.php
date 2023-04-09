@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserSettingController;
 use App\Http\Controllers\CategoryController;
@@ -22,7 +22,7 @@ use App\Http\Controllers\PasswordController;
 
 Route::middleware('auth:sanctum')->get('/user', [AuthController::class,'show']);
 
-Route::get('transactions', [TransactionController::class, 'index']);
+Route::get('users/{userId}/transactions', [TransactionController::class, 'index']);
 
 Route::get('transactions/{transactionId}', [TransactionController::class, 'show']);
 

@@ -19,6 +19,11 @@ class AuthController extends Controller
         return $request->user();
     }
 
+    public function check($email)
+    {
+        return $this->userRepository->checkIsEmailExist($email);
+    }
+
     public function register(Request $request)
     {
         try{

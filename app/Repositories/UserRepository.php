@@ -39,4 +39,10 @@ class UserRepository
         $user->save();
         return $user;
     }
+
+    public function checkIsEmailExist($email)
+    {
+        $emailRecord = $this->user->where('email',$email)->count();
+        return $emailRecord == 1 ? 1 : 0;
+    }
 }

@@ -38,6 +38,8 @@ Route::post('register', [AuthController::class,'register']);
 
 Route::post('login', [AuthController::class,'login']);
 
+Route::get('user/{email}', [AuthController::class,'check']);
+
 Route::post('users/default-currency', [UserSettingController::class, 'store']);
 
 Route::patch('users/default-currency/{userId}', [UserSettingController::class, 'update']);

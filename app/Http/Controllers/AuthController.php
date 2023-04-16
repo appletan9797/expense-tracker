@@ -58,11 +58,11 @@ class AuthController extends Controller
         if($login){
             $user = Auth::user();
             $token = $user->createToken('User Login Token')->plainTextToken;
-            $cookie = cookie('expense_tracker_login',$token, 60 * 24 *30,null,null,false,true,'None');
             return response([
                 'statusText'=>'success',
                 'userid' => Auth::id(),
-            ])->withCookie($cookie);
+                'token' => $token
+            ]);
         }
         else{
             return response()->json([

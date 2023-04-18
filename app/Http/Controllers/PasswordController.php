@@ -82,29 +82,22 @@ class PasswordController extends Controller
     }
 
     public function handleResetPassword(Request $request){
-        $validated = $this->validateIsEmailExistInUserTable($request);
-        if($validated instanceof \Illuminate\Http\JsonResponse){
-            return $validated;
-        }
 
-        $tokenEmailRecord = $this->checkIsTokenEmailRecordExist($validated['email'],$request->token);
-        if($tokenEmailRecord instanceof \Illuminate\Http\JsonResponse){
-            return $tokenEmailRecord;
-        }
-
-        $userToUpdatePassword = $this->userRepository->getUserByEmail($validated['email']);
-        return $this->savePasswordToDB($userToUpdatePassword, $request->password);
-    }
-
-    public function checkIsTokenEmailRecordExist($email,$token){
-        $tokenEmailRecord = $this->passwordResetTokenRepository->getRecordByEmailAndToken($email,$token);
-
-        if(!$tokenEmailRecord){
+        $tokenEmailRecord = $this->checkIsTokenEmailRecordExist($request->token);
+        if ($tokenEmailRecord === null){
             return response()->json([
                 'success' => false,
                 'message' => 'Token record not found'
             ], 404);
         }
+
+        $userToUpdatePassword = $this->userRepository->getUserByEmail($tokenEmailRecord->email);
+        return $this->savePasswordToDB($userToUpdatePassword, $request->password);
+    }
+
+    public function checkIsTokenEmailRecordExist($token){
+        $tokenEmailRecord = $this->passwordResetTokenRepository->getRecordByToken($token);
+        return $tokenEmailRecord;
     }
 
     public function savePasswordToDB($user, $password){

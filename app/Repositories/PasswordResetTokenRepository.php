@@ -22,13 +22,10 @@ class PasswordResetTokenRepository
         return $newTokenRecord;
     }
 
-    public function getRecordByEmailAndToken($email,$token)
+    public function getRecordByToken($token)
     {
         return $this->passwordResetToken
-                ->where([
-                        "email" => $email,
-                        "token" => $token
-                ])->latest()
+                ->where("token",$token)
                 ->first();
     }
 }

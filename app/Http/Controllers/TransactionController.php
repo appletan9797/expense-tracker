@@ -127,7 +127,6 @@ class TransactionController extends Controller
         ], 200);
     }
 
-    //TODO: check this
     public function getDataForChart($month = null, $year = null)
     {
         if(!$month){
@@ -138,11 +137,13 @@ class TransactionController extends Controller
         }
         $userId = 1;
 
-        $transactionDataForChart = $this->transactionRepository->getDataForChart($year, $month, $userId);
+        $incomeDataForChart = $this->transactionRepository->getDataForChart($year, $month, $userId, 'Income');
+        $expenseDataForChart = $this->transactionRepository->getDataForChart($year, $month, $userId, 'Expense');
         $transactionDetails = $this->getAllTransaction($year, $month, $userId);
 
         return response()->json([
-            'chart_data' => $transactionDataForChart,
+            'income_chart_data' => $incomeDataForChart,
+            'expense_chart_data' => $expenseDataForChart,
             'details_data' => $transactionDetails
         ]);
     }

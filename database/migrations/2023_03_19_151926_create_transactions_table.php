@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->increments('expense_id');
-            $table->string('expense_details');
-            $table->decimal('expense_amount');
+            $table->increments('transaction_id');
+            $table->string('transaction_details');
+            $table->decimal('transaction_amount');
             $table->unsignedInteger('category_id');
-            $table->date('expense_date');
+            $table->date('transaction_date');
             $table->enum('payment_method', ['Cash','Card']);
             $table->enum('transaction_type',['Expense','Income']);
             $table->unsignedInteger('currency_id');

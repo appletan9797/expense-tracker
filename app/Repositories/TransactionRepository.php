@@ -65,23 +65,11 @@ class TransactionRepository
     public function getDataForChart($year, $month, $userId, $transactionType)
     {
         return $this->transaction
-                ->selectRaw('categories.category_id,
-                    categories.category_name_en as label,
-                    ROUND((SUM(transaction_amount) /(SELECT SUM(transaction_amount) FROM transactions
-                    WHERE YEAR(transaction_date) = ? AND
-                    MONTH(transaction_date) = ? AND
-                    user_id = ? AND
-                    transaction_type = ?)) * 100,1) as value',
-                    [$year, $month, $userId, $transactionType])
-                ->join('categories', 'transactions.category_id', '=', 'categories.category_id')
-                ->where([
-                        ['transactions.user_id', '=', $userId],
-                        ['transactions.transaction_type','=', $transactionType]
-                    ])
-                ->whereYear('transaction_date','=', $year)
-                ->whereMonth('transaction_date','=', $month)
-                ->groupBy('categories.category_id')
-                ->orderBy('categories.category_id')
-                ->get();
+                    ->join('categories','transactions.category_id', '=', 'categories.category_id')
+                    ->where('transactions.user_id', '=', $userId)
+                    ->whereYear('transaction_date','=', $year)
+                    ->whereMonth('transaction_date','=', $month)
+                    ->orderBy('categories.category_id')
+                    ->get();
     }
 }

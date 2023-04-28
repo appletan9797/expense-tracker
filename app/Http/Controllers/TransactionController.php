@@ -137,14 +137,10 @@ class TransactionController extends Controller
         }
         $userId = 1;
 
-        $incomeDataForChart = $this->transactionRepository->getDataForChart($year, $month, $userId, 'Income');
         $expenseDataForChart = $this->transactionRepository->getDataForChart($year, $month, $userId, 'Expense');
-        $transactionDetails = $this->getAllTransaction($year, $month, $userId);
 
         return response()->json([
-            'income_chart_data' => $incomeDataForChart,
-            'expense_chart_data' => $expenseDataForChart,
-            'details_data' => $transactionDetails
+            'data' => $expenseDataForChart
         ]);
     }
 
